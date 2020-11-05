@@ -21,17 +21,19 @@
 # Не всегда интерфейс называется eth0, поэтому заменяем название интерфейса на '.*' 26.11.2019
 # 04.12.2019 Однако у всех узлов один и тот же broadcast "brd 10.93.223.255"
 #IP=$(echo `/sbin/ip a` | sed -n -e 's/^.*inet \(.*\)\(scope global .*\).*/\1/p' | cut -d ' ' -f1 | cut -d '/' -f1)
-IP=$(echo `/sbin/ip a` | sed -n -e 's/^.*inet \(.*\)\(brd 10.93.223.255\).*/\1/p' | cut -d ' ' -f1 | cut -d '/' -f1)
+IP=$(echo `/sbin/ip a` | sed -n -e 's/^.*inet \(.*\)\(brd 10.220.31.255\).*/\1/p' | cut -d ' ' -f1 | cut -d '/' -f1)
 #echo "IP=$IP"
-SUBN=$(echo $IP | cut -d'.' -f3)
-#echo "SUBN=$SUBN"
-NUM=$(echo $IP | cut -d'.' -f4)
+OCT_1=$(echo $IP | cut -d'.' -f1)
+OCT_2=$(echo $IP | cut -d'.' -f2)
+OCT_3=$(echo $IP | cut -d'.' -f3)
+#echo "OCT_3=$SUBN"
+OCT_4=$(echo $IP | cut -d'.' -f4)
 # | cut -d'/' -f1)
-#echo "NUM=$NUM"
+#echo "OCT_4=$NUM"
 # | cut -d'/' -f1)
-#echo "NUM=$NUM"
-FQDN="10-93-"${SUBN}"-"${NUM}".jinr.ru"
-SHORT="10-93-"${SUBN}"-"${NUM}
+#echo "OCT_4=$NUM"
+FQDN="${OCT_1}-${OCT_2}-${OCT_3}-${OCT_4}".jinr.ru
+SHORT="${OCT_1}-${OCT_2}-${OCT_3}-${OCT_4}"
 
 #Вот тут задаем hostname и не надо ничего перезагружать.
 /bin/hostname ${FQDN}
@@ -73,6 +75,9 @@ printf "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.locald
 printf "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6\n" >> /etc/hosts
 printf "10.93.221.8 puppet-osg.jinr.ru\n" >> /etc/hosts
 printf "$IP ${FQDN} localhost\n" >> /etc/hosts
+
+# 18.02.2020 После смены имени надо перезапустить логи
+service rsyslog restart
 
 #/etc/init.d/network restart
 #service network restart

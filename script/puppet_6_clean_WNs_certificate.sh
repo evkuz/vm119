@@ -7,17 +7,10 @@
 SCRIPT_NAME="puppet_6_agent_clean_certs.sh"
 
 # Файл получаем из скрипта *.rb
+# ТУт нужен список ip, преобраование в fqdn делаем на лету.
 ARR_FILE=./nodes_for_edit.lst
 
 iparray=($(cat $ARR_FILE))
-#oldschool just for memory
-#iparray=(13 27 28 75 78)
-
-#IP=$(echo `/sbin/ip a` | sed -n -e 's/^.*inet //p' | cut -d' ' -f1 | cut -d '/' -f1)
-#SUBN=$(echo $IP | cut -d'.' -f3)
-#NUM=$(echo $IP | cut -d'.' -f4 | cut -d'/' -f1)
-#FQDN="wn_"$SUBN"_"$NUM".jinr.ru"
-
 
 PUPPET_MASTER="puppet-osg.jinr.ru"
 
@@ -28,9 +21,13 @@ for index in ${!iparray[*]}
 do
 
 FQDN=$(echo ${iparray[$index]} | sed -e 's/\./-/g').jinr.ru
-ssh root@$PUPPET_MASTER "puppetserver ca clean --certname $FQDN"
-echo "Master side FQDN=\"$FQDN\""
+#ssh root@$PUPPET_MASTER "puppetserver ca clean --certname $FQDN"
+#rm -f  /etc/puppetlabs/puppet/ssl/ca/signed/wn_221_xxx.jinr.ru.pem
 
+#ssh root@$PUPPET_MASTER "rm -f  /etc/puppetlabs/puppet/ssl/ca/signed/$FQDN.pem"
+echo "Master side FQDN=\"$FQDN\""
+echo "Master side certname=\"$FQDN.pem\""
+ssh root@$PUPPET_MASTER "puppetserver ca clean --certname $FQDN"
 sleep 1
 done
 
@@ -47,7 +44,7 @@ ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME
 # service puppet stop 
 echo "Agent side ip=$ip_wn"
 #i=$[$i+1]
-sleep 1
+sleep 5
 
 done
 

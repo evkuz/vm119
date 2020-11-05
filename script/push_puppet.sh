@@ -11,25 +11,24 @@
 echo "This is push_puppet.sh"
 echo " "
 
+SETUPLOG="/var/log/node_setup.log"
+
+ARR_FILE=./nodes_for_edit.lst
+
+iparray=($(cat $ARR_FILE))
 
 
-#iparray=(13 21 75 80 115 130 133 134 171 175 185)
-iparray=(6 75)
-wn_count=2
-ipadr_wn="10.93.221."
 
 # on every agent from array
-i=0
- while [ $i -lt $wn_count ]
+
+for index in ${!iparray[*]}
 do
-FQDN="wn_221_${iparray[$i]}.jinr.ru"
-ip_wn=$ipadr_wn${iparray[i]}
-ssh root@$ip_wn "puppet agent -t"
+
+ssh root@${iparray[$index]} "puppet agent -t"
 
 #--waitforcert 5
 # service puppet stop
 #echo "FQDN= $FQDN"
-i=$[$i+1]
 done
 
 

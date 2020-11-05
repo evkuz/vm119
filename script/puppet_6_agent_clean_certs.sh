@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Скрипт выполняет очистку puppet ssl сертификатов на АГЕНТЕ.
-# Обычно этот скрипт запускается в цикле, внутри скрипта  "puppet_clean_wn_certificate.sh"
+# Обычно этот скрипт запускается в цикле, внутри скрипта  "puppet_6_clean_WNs_certificate.sh"
 
 #FQDN=$1
 
@@ -13,7 +13,7 @@ SETUPLOG="/var/log/node_setup.log"
 #service ${service_array[$index]} stop
 
 # stop puppet service
-puppet resource service puppet ensure=stopped >&2 >1 >> $SETUPLOG
+puppet resource service puppet ensure=stopped >&2 >&1 >> $SETUPLOG
 if [ $? -eq 0 ]
 then
   echo "$(date +"%d-%m-%Y %T") Successfully stopped puppet on $HOSTNAME" >> $SETUPLOG
@@ -57,10 +57,6 @@ fi
 #sleep 5
 #puppet agent -t
 # find /etc/puppetlabs/puppet/ssl -name $HOSTNAME.pem -delete
-
-
-
-
 
 
 # find /opt/puppetlabs/puppet/ssl/ -name $HOSTNAME.pem -delete
