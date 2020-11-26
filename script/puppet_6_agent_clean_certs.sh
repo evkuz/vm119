@@ -20,6 +20,7 @@ then
 else
   echo "$(date +"%d-%m-%Y %T") Could not stopped puppet on $HOSTNAME" >&2
   echo "$(date +"%d-%m-%Y %T") Could not stopped puppet on $HOSTNAME" >> $SETUPLOG
+  service puppet stop
 fi
 
 # clean ssl folder of agent
@@ -51,6 +52,7 @@ then
 else
   echo "$(date +"%d-%m-%Y %T") Could not start puppet service for this host $HOSTNAME" >&2
   echo "$(date +"%d-%m-%Y %T") Could not start puppet service for this host $HOSTNAME" >> $SETUPLOG
+  service puppet start
 fi
 
 
