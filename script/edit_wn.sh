@@ -36,6 +36,9 @@ REMOTE_SCRIPT="/root/init_lvm_el7.sh"
 #SCRIPT_NAME="check_os_version.sh"
 #SCRIPT_NAME="check_md5.bash"
 
+#SCRIPT_NAME="change_puppet_server.sh"
+#SCRIPT_NAME="stop_start_service.sh"
+
 #COMMAND_NAME="yum -y install libgomp"
 #COMMAND_NAME="date"
 #COMMAND_NAME="puppet cert clean"
@@ -47,18 +50,13 @@ REMOTE_SCRIPT="/root/init_lvm_el7.sh"
 #COMMAND_NAME="/root/./set_fqdn_no_dns.sh"
 # "init 6" Нужно, когда ВМ не синхронизирована с мастером, и обращается к нему с "чужим" hostname
 #COMMAND_NAME="init 6" # Совсем перегружать необязательно, достаточно перезапустить rsyslog !!!
-
+#COMMAND_NAME="reboot"
 # restore runinterval to default value
 #COMMAND_NAME="sed -i '/^runinterval.*/d' /etc/puppetlabs/puppet/puppet.conf" # Восстанавливаем runinterval до значения по умолчанию
  
 #COMMAND_NAME="condor_drain -graceful $HOSTNAME"
 
 COMMAND_NAME="systemctl restart condor"
-#iparray=(  4   6  14  24  26  27  28  34  84  85
-#          86  87 113 127 129 130 157 158 160 161
-#         162 163 165 167 168 169 170 171 172 173
-#         174 175 176 177 178 179 180 181 182 183
-#         184 185 186 187 188 189 190 191 192 193)
 
 touch $RESULT
 cp /dev/null $RESULT
@@ -80,7 +78,6 @@ do
 #date
 #    ip_wn=$ipadr_wn${iparray[$index]}
      ip_wn=${iparray[$index]}
-# perform remote script
 #ssh -o StrictHostKeyChecking=no root@$ip_wn $REMOTE_SCRIPT >> $RESULT
 #     ssh -o StrictHostKeyChecking=no root@$ip_wn '/root/init_lvm_el7.sh'  >> $RESULT
 #    ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME  >> $RESULT
