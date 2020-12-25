@@ -11,12 +11,14 @@ NODES_LIST="nodes_for_edit.lst"
 RESULT="/root/script/output.txt"
 
 
+REMOTE_SCRIPT="/root/init_lvm_el7.sh"
+
 #SCRIPT_NAME="/root/script/change_route.sh"
 #SCRIPT_NAME="install_puppet_agent.sh"
 #SCRIPT_NAME="remove_old_puppet.sh"
 #SCRIPT_NAME="/root/script/push_puppet.sh"
 #SCRIPT_NAME="/root/script/downgrade_xrootd.sh"
-SCRIPT_NAME="/root/script/change_runinterval.sh"
+#SCRIPT_NAME="/root/script/change_runinterval.sh"
 #SCRIPT_NAME="/root/script/restore_runinterval.sh"
 #SCRIPT_NAME="add_mu2e_VO_to_cluster.sh"
 #SCRIPT_NAME="/root/script/ce_script/reconfig_condor.sh"
@@ -51,6 +53,7 @@ SCRIPT_NAME="/root/script/change_runinterval.sh"
  
 #COMMAND_NAME="condor_drain -graceful $HOSTNAME"
 
+COMMAND_NAME="systemctl restart condor"
 #iparray=(  4   6  14  24  26  27  28  34  84  85
 #          86  87 113 127 129 130 157 158 160 161
 #         162 163 165 167 168 169 170 171 172 173
@@ -77,8 +80,11 @@ do
 #date
 #    ip_wn=$ipadr_wn${iparray[$index]}
      ip_wn=${iparray[$index]}
-    ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME  >> $RESULT
-#    ssh -o StrictHostKeyChecking=no root@$ip_wn $COMMAND_NAME >1 >>$RESULT
+# perform remote script
+#ssh -o StrictHostKeyChecking=no root@$ip_wn $REMOTE_SCRIPT >> $RESULT
+#     ssh -o StrictHostKeyChecking=no root@$ip_wn '/root/init_lvm_el7.sh'  >> $RESULT
+#    ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME  >> $RESULT
+    ssh -o StrictHostKeyChecking=no root@$ip_wn $COMMAND_NAME >1 >>$RESULT
 #    sleep 1
 #    printf "  ip: %s\n" ${ip_wn}
 done
