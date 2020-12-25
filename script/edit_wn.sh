@@ -78,9 +78,14 @@ do
 #date
 #    ip_wn=$ipadr_wn${iparray[$index]}
      ip_wn=${iparray[$index]}
+# Запускаем скрипт на удаленной ВМ
 #ssh -o StrictHostKeyChecking=no root@$ip_wn $REMOTE_SCRIPT >> $RESULT
 #     ssh -o StrictHostKeyChecking=no root@$ip_wn '/root/init_lvm_el7.sh'  >> $RESULT
+
+# Запускаем скрипт, лежащий локально, на удаленной ВМ
 #    ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME  >> $RESULT
+
+# Запускаем команду на удаленной ВМ
     ssh -o StrictHostKeyChecking=no root@$ip_wn $COMMAND_NAME >1 >>$RESULT
 #    sleep 1
 #    printf "  ip: %s\n" ${ip_wn}
