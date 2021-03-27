@@ -5,9 +5,12 @@
 
 
 SCRIPT_NAME="puppet_6_agent_clean_certs.sh"
+SSL_LOG="cert_clean.log"
+touch $SSL_LOG
+cp /dev/null $SSL_LOG
 
 # Файл получаем из скрипта *.rb
-# ТУт нужен список ip, преобраование в fqdn делаем на лету.
+# ТУт нужен список ip, преобразование в fqdn делаем на лету.
 ARR_FILE=./nodes_for_edit.lst
 
 iparray=($(cat $ARR_FILE))
@@ -33,23 +36,28 @@ done
 
 sleep 2
 ########### agent part
+
+# Выполняем проверку,что ip пингуется. Иначе весь скрипт дальше не выполняется.
 # on every agent from array
 echo "Next agent' side"
 for index in ${!iparray[*]}
 do
-ip_wn=${iparray[$index]}
-ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME
-
-#--waitforcert 5 
-# service puppet stop 
 echo "Agent side ip=$ip_wn"
-#i=$[$i+1]
-sleep 5
+ip_wn=${iparray[$index]}
+
+ping -c 2 $ip_wn
+        if [ $? -eq 0 ]; then
+          # Success
+	  ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME
+        else
+          echo "$(date +"%d-%m-%Y %T") Could not ping $ip_wn" >&2
+          echo "$(date +"%d-%m-%Y %T") Could not ping $ip_wn" >> $SSL_LOG
+        fi
+
+
+#ssh -o StrictHostKeyChecking=no root@$ip_wn 'bash -s' < $SCRIPT_NAME
+
+sleep 1
 
 done
 
-#service puppet stop
-#find /etc/puppetlabs/puppet/ssl -name wn_221_2.jinr.ru.pem -delete
-#service puppet start
-
-#puppet agent -t --waitforcert 5
